@@ -7,17 +7,17 @@ use std::error::Error as StdError;
 
 pub struct Header {
     header: String,
-    demo_protocol: u32,
-    network_protocol: u32,
+    demo_protocol: i32,
+    network_protocol: i32,
     server_name: String,
     client_name: String,
     map_name: String,
     game_directory: String,
     // Time in seconds
     playback_time: f32,
-    ticks: u32,
-    frames: u32,
-    sign_on_length: u32,
+    ticks: i32,
+    frames: i32,
+    sign_on_length: i32,
 }
 
 impl Header {
@@ -35,17 +35,17 @@ impl Header {
 
         Ok(Header {
             header: header_string,
-            demo_protocol: u32::from_le_bytes(read_to_le_bytes(&mut r)?),
-            network_protocol: u32::from_le_bytes(read_to_le_bytes(&mut r)?),
+            demo_protocol: i32::from_le_bytes(read_to_le_bytes(&mut r)?),
+            network_protocol: i32::from_le_bytes(read_to_le_bytes(&mut r)?),
             server_name: String::from_utf8(r.read(260))?,
             client_name: String::from_utf8(r.read(260))?,
             map_name: String::from_utf8(r.read(260))?,
             game_directory: String::from_utf8(r.read(260))?,
             // Time in seconds
             playback_time: f32::from_le_bytes(read_to_le_bytes(&mut r)?),
-            ticks: u32::from_le_bytes(read_to_le_bytes(&mut r)?),
-            frames: u32::from_le_bytes(read_to_le_bytes(&mut r)?),
-            sign_on_length: u32::from_le_bytes(read_to_le_bytes(&mut r)?),
+            ticks: i32::from_le_bytes(read_to_le_bytes(&mut r)?),
+            frames: i32::from_le_bytes(read_to_le_bytes(&mut r)?),
+            sign_on_length: i32::from_le_bytes(read_to_le_bytes(&mut r)?),
         })
     }
 
@@ -55,12 +55,12 @@ impl Header {
     }
 
     #[inline(always)]
-    pub fn demo_protocol(self) -> u32 {
+    pub fn demo_protocol(self) -> i32 {
         self.demo_protocol
     }
 
     #[inline(always)]
-    pub fn network_protocol(self) -> u32 {
+    pub fn network_protocol(self) -> i32 {
         self.network_protocol
     }
 
@@ -90,17 +90,17 @@ impl Header {
     }
 
     #[inline(always)]
-    pub fn ticks(self) -> u32 {
+    pub fn ticks(self) -> i32 {
         self.ticks
     }
 
     #[inline(always)]
-    pub fn frames(self) -> u32 {
+    pub fn frames(self) -> i32 {
         self.frames
     }
 
     #[inline(always)]
-    pub fn sign_on_length(self) -> u32 {
+    pub fn sign_on_length(self) -> i32 {
         self.sign_on_length
     }
 }
