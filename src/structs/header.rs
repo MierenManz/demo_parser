@@ -20,7 +20,7 @@ pub struct Header {
 }
 
 impl Header {
-    pub fn new(mut r: Reader) -> Result<Header, DemoError> {
+    pub fn new(r: &mut Reader) -> Result<Header, DemoError> {
         let bytes: Vec<u8> = r.read(7);
         let header_string = String::from_utf8_lossy(&bytes).to_string();
         if header_string != "HL2DEMO" {
@@ -34,17 +34,17 @@ impl Header {
 
         Ok(Header {
             header: header_string,
-            demo_protocol: i32::from_le_bytes(read_to_le_bytes(&mut r)?),
-            network_protocol: i32::from_le_bytes(read_to_le_bytes(&mut r)?),
+            demo_protocol: i32::from_le_bytes(read_to_le_bytes(r)?),
+            network_protocol: i32::from_le_bytes(read_to_le_bytes(r)?),
             server_name: String::from_utf8_lossy(r.read::<Vec<u8>>(260).as_ref()).to_string(),
             client_name: String::from_utf8_lossy(r.read::<Vec<u8>>(260).as_ref()).to_string(),
             map_name: String::from_utf8_lossy(r.read::<Vec<u8>>(260).as_ref()).to_string(),
             game_directory: String::from_utf8_lossy(r.read::<Vec<u8>>(260).as_ref()).to_string(),
             // Time in seconds
-            playback_time: f32::from_le_bytes(read_to_le_bytes(&mut r)?),
-            ticks: i32::from_le_bytes(read_to_le_bytes(&mut r)?),
-            frames: i32::from_le_bytes(read_to_le_bytes(&mut r)?),
-            sign_on_length: i32::from_le_bytes(read_to_le_bytes(&mut r)?),
+            playback_time: f32::from_le_bytes(read_to_le_bytes(r)?),
+            ticks: i32::from_le_bytes(read_to_le_bytes(r)?),
+            frames: i32::from_le_bytes(read_to_le_bytes(r)?),
+            sign_on_length: i32::from_le_bytes(read_to_le_bytes(r)?),
         })
     }
 

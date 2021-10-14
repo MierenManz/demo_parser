@@ -1,6 +1,6 @@
-use crate::reader::Reader;
-
 use super::utils::read_to_le_bytes;
+
+use crate::reader::Reader;
 
 use std::convert::TryInto;
 use std::error::Error as StdError;
@@ -14,11 +14,11 @@ pub struct Packet {
 }
 
 impl Packet {
-    pub fn new(mut r: Reader) -> Result<Packet, Box<dyn StdError>> {
+    pub fn new(r: &mut Reader) -> Result<Packet, Box<dyn StdError>> {
         let cmd_type = r.read_byte() as char;
-        let unknown = i32::from_le_bytes(read_to_le_bytes(&mut r)?);
-        let tick_count = i32::from_le_bytes(read_to_le_bytes(&mut r)?);
-        let size_of_packet = i32::from_le_bytes(read_to_le_bytes(&mut r)?);
+        let unknown = i32::from_le_bytes(read_to_le_bytes(r)?);
+        let tick_count = i32::from_le_bytes(read_to_le_bytes(r)?);
+        let size_of_packet = i32::from_le_bytes(read_to_le_bytes(r)?);
         let reader = Reader::new(r.read::<Vec<u8>>(size_of_packet.try_into()?));
 
         Ok(Packet {
