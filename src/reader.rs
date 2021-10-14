@@ -7,10 +7,7 @@ pub struct Reader {
 }
 
 impl Reader {
-    pub fn new<T>(buffer: T) -> Reader
-    where
-        T: Into<Vec<u8>>,
-    {
+    pub fn new<T: Into<Vec<u8>>>(buffer: T) -> Reader {
         Reader {
             underlying_buffer: buffer.into(),
         }
@@ -22,10 +19,7 @@ impl Reader {
         })
     }
 
-    pub fn read<T>(&mut self, length: usize) -> T
-    where
-        T: From<Vec<u8>>,
-    {
+    pub fn read<T: From<Vec<u8>>>(&mut self, length: usize) -> T {
         let buff = self
             .underlying_buffer
             .drain(..length)
@@ -36,6 +30,13 @@ impl Reader {
         self.underlying_buffer.shrink_to_fit();
 
         buff
+    }
+
+    pub fn read_byte(&mut self) -> u8 {
+        let byte = self.underlying_buffer.remove(0);
+        self.underlying_buffer.shrink_to_fit();
+
+        byte
     }
 
     pub fn remove(&mut self, length: usize) {

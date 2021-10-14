@@ -1,9 +1,8 @@
-use super::super::error::DemoError;
-use super::super::error::ErrorType;
-use super::super::reader::Reader;
+use super::utils::read_to_le_bytes;
 
-use std::convert::TryInto;
-use std::error::Error as StdError;
+use crate::error::DemoError;
+use crate::error::ErrorType;
+use crate::reader::Reader;
 
 pub struct Header {
     header: String,
@@ -21,14 +20,14 @@ pub struct Header {
 }
 
 impl Header {
-    pub fn new(mut r: Reader) -> Result<Header, Box<dyn StdError>> {
+    pub fn new(mut r: Reader) -> Result<Header, DemoError> {
         let bytes: Vec<u8> = r.read(7);
         let header_string = String::from_utf8_lossy(&bytes).to_string();
         if header_string != "HL2DEMO" {
-            return Err(Box::new(DemoError::new(
+            return Err(DemoError::new(
                 ErrorType::Header,
                 format!("Invalid header {}", header_string),
-            )));
+            ));
         }
         // Removes the null byte
         r.remove(1);
@@ -37,10 +36,10 @@ impl Header {
             header: header_string,
             demo_protocol: i32::from_le_bytes(read_to_le_bytes(&mut r)?),
             network_protocol: i32::from_le_bytes(read_to_le_bytes(&mut r)?),
-            server_name: String::from_utf8(r.read(260))?,
-            client_name: String::from_utf8(r.read(260))?,
-            map_name: String::from_utf8(r.read(260))?,
-            game_directory: String::from_utf8(r.read(260))?,
+            server_name: String::from_utf8_lossy(r.read::<Vec<u8>>(260).as_ref()).to_string(),
+            client_name: String::from_utf8_lossy(r.read::<Vec<u8>>(260).as_ref()).to_string(),
+            map_name: String::from_utf8_lossy(r.read::<Vec<u8>>(260).as_ref()).to_string(),
+            game_directory: String::from_utf8_lossy(r.read::<Vec<u8>>(260).as_ref()).to_string(),
             // Time in seconds
             playback_time: f32::from_le_bytes(read_to_le_bytes(&mut r)?),
             ticks: i32::from_le_bytes(read_to_le_bytes(&mut r)?),
@@ -102,16 +101,5 @@ impl Header {
     #[inline(always)]
     pub fn sign_on_length(self) -> i32 {
         self.sign_on_length
-    }
-}
-
-#[inline(always)]
-fn read_to_le_bytes(r: &mut Reader) -> Result<[u8; 4], DemoError> {
-    match r.read::<Vec<u8>>(4).try_into() {
-        Ok(v) => Ok(v),
-        Err(_) => Err(DemoError::new(
-            ErrorType::Parsing,
-            "Could not read 4 bytes into array",
-        )),
     }
 }
