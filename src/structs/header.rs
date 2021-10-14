@@ -30,6 +30,8 @@ impl Header {
                 format!("Invalid header {}", header_string),
             )));
         }
+        // Removes the null byte
+        r.remove(1);
 
         Ok(Header {
             header: header_string,
@@ -47,46 +49,57 @@ impl Header {
         })
     }
 
+    #[inline(always)]
     pub fn header(self) -> String {
         self.header
     }
 
+    #[inline(always)]
     pub fn demo_protocol(self) -> u32 {
         self.demo_protocol
     }
 
+    #[inline(always)]
     pub fn network_protocol(self) -> u32 {
         self.network_protocol
     }
 
+    #[inline(always)]
     pub fn server_name(self) -> String {
         self.server_name
     }
 
+    #[inline(always)]
     pub fn client_name(self) -> String {
         self.client_name
     }
 
+    #[inline(always)]
     pub fn map_name(self) -> String {
         self.map_name
     }
 
+    #[inline(always)]
     pub fn game_directory(self) -> String {
         self.game_directory
     }
 
+    #[inline(always)]
     pub fn playback_time(self) -> f32 {
         self.playback_time
     }
 
+    #[inline(always)]
     pub fn ticks(self) -> u32 {
         self.ticks
     }
 
+    #[inline(always)]
     pub fn frames(self) -> u32 {
         self.frames
     }
 
+    #[inline(always)]
     pub fn sign_on_length(self) -> u32 {
         self.sign_on_length
     }
