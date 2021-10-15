@@ -49,57 +49,57 @@ impl Header {
     }
 
     #[inline(always)]
-    pub fn header(self) -> String {
-        self.header
+    pub fn header(&self) -> String {
+        (*self.header).to_string()
     }
 
     #[inline(always)]
-    pub fn demo_protocol(self) -> i32 {
+    pub fn demo_protocol(&self) -> i32 {
         self.demo_protocol
     }
 
     #[inline(always)]
-    pub fn network_protocol(self) -> i32 {
+    pub fn network_protocol(&self) -> i32 {
         self.network_protocol
     }
 
     #[inline(always)]
-    pub fn server_name(self) -> String {
-        self.server_name
+    pub fn server_name(&self) -> String {
+        (*self.server_name).to_string()
     }
 
     #[inline(always)]
-    pub fn client_name(self) -> String {
-        self.client_name
+    pub fn client_name(&self) -> String {
+        (*self.client_name).to_string()
     }
 
     #[inline(always)]
-    pub fn map_name(self) -> String {
-        self.map_name
+    pub fn map_name(&self) -> String {
+        (*self.map_name).to_string()
     }
 
     #[inline(always)]
-    pub fn game_directory(self) -> String {
-        self.game_directory
+    pub fn game_directory(&self) -> String {
+        (*self.game_directory).to_string()
     }
 
     #[inline(always)]
-    pub fn playback_time(self) -> f32 {
+    pub fn playback_time(&self) -> f32 {
         self.playback_time
     }
 
     #[inline(always)]
-    pub fn ticks(self) -> i32 {
+    pub fn ticks(&self) -> i32 {
         self.ticks
     }
 
     #[inline(always)]
-    pub fn frames(self) -> i32 {
+    pub fn frames(&self) -> i32 {
         self.frames
     }
 
     #[inline(always)]
-    pub fn sign_on_length(self) -> i32 {
+    pub fn sign_on_length(&self) -> i32 {
         self.sign_on_length
     }
 }
