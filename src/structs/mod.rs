@@ -1,4 +1,4 @@
-// pub(crate) mod demo;
+// pub mod demo;
 pub(crate) mod frame;
 pub(crate) mod header;
 pub(crate) mod packet;

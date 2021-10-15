@@ -9,8 +9,8 @@ use std::error::Error as StdError;
 pub struct Frame {
     server_frame: i32,
     client_frame: i32,
-    size_of_packet: i32,
-    // Reader has size of `size_of_packet`
+    sub_packet_size: i32,
+    // Reader has size of `sub_packet_size`
     reader: Reader,
     packet: Packet,
 }
@@ -19,8 +19,9 @@ impl Frame {
     pub fn new(r: &mut Reader) -> Result<Frame, Box<dyn StdError>> {
         let server_frame = i32::from_le_bytes(read_to_le_bytes(r)?);
         let client_frame = i32::from_le_bytes(read_to_le_bytes(r)?);
-        let size_of_packet = i32::from_le_bytes(read_to_le_bytes(r)?);
-        let reader = Reader::new(r.read::<Vec<u8>>(size_of_packet.try_into()?));
+        let sub_packet_size = i32::from_le_bytes(read_to_le_bytes(r)?);
+        let sub_packet_usize: usize = sub_packet_size.try_into()?;
+        let reader = Reader::new(r.read::<Vec<u8>>(sub_packet_usize));
         let packet = Packet::new(r)?;
         // Remove 40 null bytes
         r.remove(40);
@@ -28,7 +29,7 @@ impl Frame {
         Ok(Frame {
             server_frame,
             client_frame,
-            size_of_packet,
+            sub_packet_size,
             reader,
             packet,
         })
@@ -42,8 +43,8 @@ impl Frame {
         self.client_frame
     }
 
-    pub fn size_of_packet(self) -> i32 {
-        self.size_of_packet
+    pub fn sub_packet_size(self) -> i32 {
+        self.sub_packet_size
     }
 
     pub fn reader(self) -> Reader {

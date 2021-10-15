@@ -16,9 +16,8 @@ pub struct Demo {
 impl Demo {
     pub fn new(r: &mut Reader) -> Result<Demo, Box<dyn StdError>> {
         let header = Header::new(r)?;
-        let frame_count_int = header.frames();
 
-        let frame_count: usize = match frame_count_int.try_into() {
+        let frame_count: usize = match header.frames().try_into() {
             Ok(v) => v,
             Err(_) => {
                 return Err(Box::new(DemoError::new(
@@ -28,10 +27,9 @@ impl Demo {
             }
         };
 
-        let mut frames: Vec<Frame> = Vec::with_capacity(frame_count.try_into()?);
-
-        for i in 0..frame_count {
-            frames[i] = Frame::new(r)?;
+        let mut frames: Vec<Frame> = Vec::new();
+        for f in 0..frame_count {
+            frames.push(Frame::new(r)?);
         }
 
         Ok(Demo { header, frames })
@@ -41,7 +39,7 @@ impl Demo {
         self.header
     }
 
-    pub fn frames(self) -> Vec<Frame> {
-        self.frames
-    }
+    // pub fn frames(self) -> Vec<Frame> {
+    //     self.frames
+    // }
 }
